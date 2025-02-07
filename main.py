@@ -1,15 +1,17 @@
 from fastapi import FastAPI
-from routes import golf  # ⬅️ golf API 라우터 불러오기
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
 from starlette.middleware.base import BaseHTTPMiddleware
+from routes.golf import router as golf_router
 
 app = FastAPI()
-
+app.include_router(golf_router)  # ✅ FastAPI의 기존 CORS 정책 유지
 # ✅ 허용할 프론트엔드 도메인 설정
 origins = [
     "https://golf-site-ten.vercel.app",  # Vercel (프론트엔드)
+    "http://golf-site-ten.vercel.app",  # Vercel (프론트엔드)
+    "https://golf-site-ten.vercel.app/",  # Vercel (프론트엔드)
     "https://golf-site.up.railway.app",  # Railway (백엔드)
     "http://localhost:3000",  # 로컬 개발 환경
 ]
@@ -32,7 +34,8 @@ class AddCORSHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["Access-Control-Allow-Credentials"] = "true"
         return response
 
-app.add_middleware(AddCORSHeadersMiddleware)
+
+app.add_middleware(AddCORSHeadersMiddleware)  # 🚨 **이제 CORSMiddleware보다 먼저 실행됨!**
 
 
 @app.get("/")
