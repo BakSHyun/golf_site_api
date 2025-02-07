@@ -5,7 +5,9 @@ from starlette.requests import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from routes.golf import router as golf_router
 
-app = FastAPI()
+app = FastAPI(
+    redirect_slashes=False  # ✅ 자동 슬래시 리다이렉트 방지
+)
 
 # ✅ CORS 설정 (Vercel & 로컬 개발 허용)
 origins = [
