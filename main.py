@@ -5,6 +5,7 @@ app = FastAPI()
 
 # ✅ CORS 설정을 확실하게 적용
 origins = [
+    "http://golf-site-ten.vercel.app",  # Vercel 프론트엔드
     "https://golf-site-ten.vercel.app",  # Vercel 프론트엔드
     "https://golf-site.up.railway.app",  # Railway 백엔드
     "http://localhost:3000",  # 개발용
