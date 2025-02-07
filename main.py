@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from routes import golf  # ⬅️ golf API 라우터 불러오기
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.requests import Request
 
 app = FastAPI()
 
@@ -22,15 +23,13 @@ app.add_middleware(
     expose_headers=["*"],  # ⭐ 응답 헤더 공개 (CORS 적용)
 )
 
-# ✅ golf API 라우터 추가 (이 부분이 없으면 API가 사라짐)
-app.include_router(golf.router)
-# ✅ OPTIONS 요청을 직접 처리해서 400 오류 해결
 @app.options("/{full_path:path}")
-async def preflight_handler(full_path: str):
+async def preflight_handler(full_path: str, request: Request):
     headers = {
-        "Access-Control-Allow-Origin": "https://golf-site-ten.vercel.app",
+        "Access-Control-Allow-Origin": request.headers.get("Origin", "*"),
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Credentials": "true",
     }
     return JSONResponse(content={}, headers=headers)
 
