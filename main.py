@@ -24,15 +24,16 @@ app.add_middleware(
 
 # ✅ golf API 라우터 추가 (이 부분이 없으면 API가 사라짐)
 app.include_router(golf.router)
-# ✅ OPTIONS 요청 직접 처리 (CORS 문제 해결)
+# ✅ OPTIONS 요청을 직접 처리해서 400 오류 해결
 @app.options("/{full_path:path}")
-async def preflight_handler():
+async def preflight_handler(full_path: str):
     headers = {
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": "https://golf-site-ten.vercel.app",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Authorization",
     }
     return JSONResponse(content={}, headers=headers)
+
 @app.get("/")
 def home():
     return {"message": "Welcome to Golf API!"}
