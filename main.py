@@ -21,8 +21,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ CORS 설정 이후에 라우트 추가해야 함
-app.include_router(golf_router)  # 🚨 CORS 미들웨어보다 나중에 실행!
+# ✅ CORS 응답을 강제 적용하는 미들웨어
+class ForceCORSHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        origin = request.headers.get("Origin", "")
+
+        if origin in origins:  # ✅ 요청한 Origin이 허용된 목록에 있으면 헤더 추가
+            response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response
+
+app.add_middleware(ForceCORSHeadersMiddleware)  # ✅ 미들웨어 실행 순서 확인
+
+# ✅ CORS 설정 이후에 라우트 추가
+app.include_router(golf_router)
 
 
 @app.get("/")
