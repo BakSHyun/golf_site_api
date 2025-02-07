@@ -5,12 +5,13 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(
     redirect_slashes=True  # ✅ /golf → /golf/ 자동 리디렉트 활성화
 )
-
-
-
+origins = [
+    "https://golf-site-ten.vercel.app",
+    "http://localhost:3000",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Next.js 허용
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
