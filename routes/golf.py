@@ -7,7 +7,8 @@ router = APIRouter(
 )
 
 # 1️⃣ 모든 골프장 가져오기
-@router.get("/")
+@router.get("")  # ✅ `/golf` 요청 처리
+@router.get("/")  # ✅ `/golf/` 요청 처리
 def get_all_golf_courses():
     response = supabase.table("golf_courses").select("*").execute()
     return response.data if response.data else []
@@ -19,6 +20,7 @@ def get_golf_course(golf_id: int):
     return response.data[0] if response.data else {"error": "Golf course not found"}
 
 # 3️⃣ 새로운 골프장 추가하기
+@router.post("")  # ✅ `/golf` 요청 처리
 @router.post("/")
 def add_golf_course(data: dict):
     response = supabase.table("golf_courses").insert(data).execute()

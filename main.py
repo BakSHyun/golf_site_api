@@ -3,7 +3,7 @@ from routes import golf  # ⬅️ golf API 라우터 불러오기
 # ✅ CORS 설정 추가 (이전 오류 해결 코드)
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(
-    redirect_slashes=True  # ✅ /golf → /golf/ 자동 리디렉트 활성화
+    redirect_slashes=False  # ✅ /golf → /golf/ 자동 리디렉트 활성화
 )
 origins = [
     "https://golf-site-ten.vercel.app",
