@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from routes import golf  # ⬅️ golf API 라우터 불러오기
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -22,7 +24,15 @@ app.add_middleware(
 
 # ✅ golf API 라우터 추가 (이 부분이 없으면 API가 사라짐)
 app.include_router(golf.router)
-
+# ✅ OPTIONS 요청 직접 처리 (CORS 문제 해결)
+@app.options("/{full_path:path}")
+async def preflight_handler():
+    headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    }
+    return JSONResponse(content={}, headers=headers)
 @app.get("/")
 def home():
     return {"message": "Welcome to Golf API!"}
